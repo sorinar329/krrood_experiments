@@ -1975,12 +1975,6 @@
     <!-- http://benchmark/OWL2Bench#T20CricketFan -->
 
     <owl:Class rdf:about="http://benchmark/OWL2Bench#T20CricketFan">
-        <owl:equivalentClass>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://benchmark/OWL2Bench#isCrazyAbout"/>
-                <owl:hasValue rdf:resource="http://benchmark/OWL2Bench#T20Cricket"/>
-            </owl:Restriction>
-        </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://benchmark/OWL2Bench#Person"/>
     </owl:Class>
     
@@ -77989,6 +77983,16 @@
             </owl:Restriction>
         </owl:intersectionOf>
         <rdfs:subClassOf rdf:resource="http://benchmark/OWL2Bench#BasketBallFan"/>
+    </owl:Class>
+    <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://benchmark/OWL2Bench#Person"/>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://benchmark/OWL2Bench#isCrazyAbout"/>
+                <owl:someValuesFrom rdf:resource="http://benchmark/OWL2Bench#Cricket"/>
+            </owl:Restriction>
+        </owl:intersectionOf>
+        <rdfs:subClassOf rdf:resource="http://benchmark/OWL2Bench#T20CricketFan"/>
     </owl:Class>
     <owl:Class>
         <owl:intersectionOf rdf:parseType="Collection">

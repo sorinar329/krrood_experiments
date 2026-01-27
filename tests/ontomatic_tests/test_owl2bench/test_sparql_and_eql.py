@@ -2,9 +2,10 @@ import os
 import time
 
 import pytest
+import rdflib
 from krrood.entity_query_language.entity import (
     variable,
-    has_solution,
+    has_solution_for,
     to_str,
     exists,
     entity,
@@ -15,6 +16,7 @@ from krrood.entity_query_language.entity_result_processors import an
 from krrood.entity_query_language.enums import PredicateType
 from krrood.entity_query_language.predicate import HasAttribute, IsSubClassOrRole
 from krrood.entity_query_language.symbolic import Variable
+from krrood.ontomatic.property_descriptor.monitored_container import MonitoredSet
 from krrood.ontomatic.property_descriptor.property_descriptor import HasProperty
 
 from krrood_experiments.owl2bench.ontomatic.helpers import (
@@ -69,6 +71,46 @@ def test_owl2bench_statements_unreasoned(unreasoned_owl2bench_file_path):
     print(f"Loading time: {loading_time} seconds")
 
     evaluate_eql_and_sparql_queries()
+
+def test_load_registry_and_create_ontology(unreasoned_owl2bench_file_path):
+    registry = load_instances_for_owl2bench_with_predicates(
+        unreasoned_owl2bench_file_path
+    )
+
+     #for i in registry._by_uri.values():
+     #   print(i)
+
+    test_instance = registry._by_uri[rdflib.term.URIRef('http://benchmark/OWL2Bench#U0C0D0CS3')]
+    for i in test_instance:
+        #print(i)
+        #print(i.uri)
+        #print(type(i).__name__)
+
+        #print(i.__dict__)
+        attribs = lambda obj: [o for o in dir(i) if not o.startswith('_')]
+
+        for a in attribs(i):
+            if getattr(i, a) is not None:
+                # if get attr returns a method continue
+                if callable(getattr(i, a)):
+                    continue
+                # if get attr returns another python object
+                if isinstance(getattr(i, a), AnonymousClass):
+                    continue
+
+                if isinstance(getattr(i, a), list):
+                    continue
+                if getattr(i, a) == MonitoredSet():
+                    for m in getattr(i, a):
+                        print(f"{a}: {m.uri}")
+                elif a == "uri":
+                    print(f"{a}: {getattr(i, a)}")
+
+                elif a == "cls_uri":
+                    print(f"{a}: {getattr(i, a)}")
+
+                else:
+                    print(f"{a}: {getattr(i, a)}")
 
 
 def test_eql_value_axiom():
